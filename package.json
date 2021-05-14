@@ -1,0 +1,21 @@
+{
+  "name": "update-ios-version-info-plist-action",
+  "version": "1.0.0",
+  "description": "Update iOS version Info.plist",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "package-action": "tsc && ncc build lib/index.js --license licenses.txt"
+  },
+  "author": "damienaicheh",
+  "license": "ISC",
+  "dependencies": {
+    "@actions/core": "^1.2.7",
+    "@actions/exec": "^1.0.4",
+    "fs": "0.0.1-security"
+  },
+  "devDependencies": {
+    "@types/node": "^14.14.41",
+    "plist": "^3.0.2"
+  }
+}

@@ -1,0 +1,35 @@
+name: versions
+
+on:
+  pull_request:
+    paths-ignore:
+      - '**.md'
+  push:
+    branches:
+      - main
+      - releases/*
+    paths-ignore:
+      - '**.md'
+
+jobs:
+  local-version:
+    runs-on: macos-latest
+    name: Run local action version
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Update Info.plist
+        uses: ./
+        with:
+          info-plist-path: './samples/Info.plist'
+          bundle-short-version-string: '2.0'
+          bundle-version: '2'
+          print-file: true
+
+      - name: Update Info-1.plist
+        uses: ./
+        with:
+          info-plist-path: './samples/Info.plist'
+          bundle-short-version-string: '123.4'
+          bundle-version: '5'
