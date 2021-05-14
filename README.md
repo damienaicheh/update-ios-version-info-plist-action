@@ -24,7 +24,7 @@ Output the Info.plist file in console before and after update.
 
 ```yaml
 - name: Update Info.plist
-  uses: damienaicheh/update-ios-version-info-plist-action@1.0
+  uses: damienaicheh/update-ios-version-info-plist-action@1.0.0
   with:
     info-plist-path: './path_to_your/Info.plist'
     bundle-short-version-string: '2.0'

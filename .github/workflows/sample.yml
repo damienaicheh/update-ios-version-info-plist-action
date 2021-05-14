@@ -20,7 +20,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Update Info.plist
-        uses: damienaicheh/update-ios-version-info-plist-action@1.0
+        uses: damienaicheh/update-ios-version-info-plist-action@1.0.0
         with:
           info-plist-path: './samples/Info.plist'
           bundle-short-version-string: '2.0'
