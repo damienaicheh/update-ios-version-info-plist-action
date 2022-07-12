@@ -21,28 +21,23 @@ async function main(): Promise<void> {
         let bundleShortVersionString: string = core.getInput('bundle-short-version-string');
         let bundleVersion: string = core.getInput('bundle-version');
 
-        if (!bundleShortVersionString) {
-            core.setFailed(`Bundle Short Version String has no value: ${bundleShortVersionString}. You must define it.`);
-            process.exit(1);
-        }
-
-        if (!bundleVersion) {
-            core.setFailed(`Bundle Version has no value: ${bundleVersion}. You must define it.`);
-            process.exit(1);
-        }
-
         if (printFile) {
             core.info('Before update:');
             await exec.exec('cat', [infoPlistPath]);
         }
 
-
         let fileContent = fs.readFileSync(infoPlistPath, { encoding: 'utf8' });
         core.debug(JSON.stringify(fileContent));
 
         let obj = plist.parse(fileContent);
-        obj['CFBundleShortVersionString'] = bundleShortVersionString;
-        obj['CFBundleVersion'] = bundleVersion;
+        if (bundleShortVersionString) {
+            core.info(`Overriding CFBundleShortVersionString: ${bundleShortVersionString}`);
+            obj['CFBundleShortVersionString'] = bundleShortVersionString;
+        }
+        if(bundleVersion) {
+            core.info(`Overriding CFBundleVersion: ${bundleVersion}`);
+            obj['CFBundleVersion'] = bundleVersion;
+        }
 
         fs.chmodSync(infoPlistPath, "600");
         fs.writeFileSync(infoPlistPath, plist.build(obj));
@@ -51,8 +46,8 @@ async function main(): Promise<void> {
             core.info('After update:');
             await exec.exec('cat', [infoPlistPath]);
         }
-
-        core.info(`Info.plist updated successfully with CFBundleShortVersionString: ${bundleShortVersionString} and CFBundleVersion: ${bundleVersion}`);
+        
+        core.info(`Info.plist updated successfully`);
     } catch (error) {
         core.setFailed(error.message);
     }

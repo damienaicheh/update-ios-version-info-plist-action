@@ -8,15 +8,15 @@ This action update the `BundleShortVersionString` and `BundleVersion` properties
 
 **Required** The relative path for the Info.plist file.
 
-### `bundle-short-version-string` 
-  
-**Required** The CF Bundle Short Version String.
+### `bundle-short-version-string`
 
-###  `bundle-version`
-    
-**Required** The CF Bundle Version.
+The CF Bundle Short Version String.
 
-###  `print-file`
+### `bundle-version`
+
+The CF Bundle Version.
+
+### `print-file`
 
 Output the Info.plist file in console before and after update.
 
@@ -26,8 +26,8 @@ Output the Info.plist file in console before and after update.
 - name: Update Info.plist
   uses: damienaicheh/update-ios-version-info-plist-action@v1.0.0
   with:
-    info-plist-path: './path_to_your/Info.plist'
-    bundle-short-version-string: '2.0'
-    bundle-version: '2'
+    info-plist-path: "./path_to_your/Info.plist"
+    bundle-short-version-string: "2.0"
+    bundle-version: "2"
     print-file: true
 ```
