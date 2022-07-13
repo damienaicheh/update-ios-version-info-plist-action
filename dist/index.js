@@ -6,6 +6,25 @@
 
 "use strict";
 
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -15,17 +34,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
-    result["default"] = mod;
-    return result;
-};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __importStar(__nccwpck_require__(127));
 const exec = __importStar(__nccwpck_require__(49));
-const fs = __importStar(__nccwpck_require__(747));
+const fs = __importStar(__nccwpck_require__(147));
 const plist = __importStar(__nccwpck_require__(757));
 process.on('unhandledRejection', handleError);
 main().catch(handleError);
@@ -41,14 +53,6 @@ function main() {
             core.debug(`Running task with ${infoPlistPath}`);
             let bundleShortVersionString = core.getInput('bundle-short-version-string');
             let bundleVersion = core.getInput('bundle-version');
-            if (!bundleShortVersionString) {
-                core.setFailed(`Bundle Short Version String has no value: ${bundleShortVersionString}. You must define it.`);
-                process.exit(1);
-            }
-            if (!bundleVersion) {
-                core.setFailed(`Bundle Version has no value: ${bundleVersion}. You must define it.`);
-                process.exit(1);
-            }
             if (printFile) {
                 core.info('Before update:');
                 yield exec.exec('cat', [infoPlistPath]);
@@ -56,15 +60,21 @@ function main() {
             let fileContent = fs.readFileSync(infoPlistPath, { encoding: 'utf8' });
             core.debug(JSON.stringify(fileContent));
             let obj = plist.parse(fileContent);
-            obj['CFBundleShortVersionString'] = bundleShortVersionString;
-            obj['CFBundleVersion'] = bundleVersion;
+            if (bundleShortVersionString) {
+                core.info(`Overriding CFBundleShortVersionString: ${bundleShortVersionString}`);
+                obj['CFBundleShortVersionString'] = bundleShortVersionString;
+            }
+            if (bundleVersion) {
+                core.info(`Overriding CFBundleVersion: ${bundleVersion}`);
+                obj['CFBundleVersion'] = bundleVersion;
+            }
             fs.chmodSync(infoPlistPath, "600");
             fs.writeFileSync(infoPlistPath, plist.build(obj));
             if (printFile) {
                 core.info('After update:');
                 yield exec.exec('cat', [infoPlistPath]);
             }
-            core.info(`Info.plist updated successfully with CFBundleShortVersionString: ${bundleShortVersionString} and CFBundleVersion: ${bundleVersion}`);
+            core.info(`Info.plist updated successfully`);
         }
         catch (error) {
             core.setFailed(error.message);
@@ -95,7 +105,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const os = __importStar(__nccwpck_require__(87));
+const os = __importStar(__nccwpck_require__(37));
 const utils_1 = __nccwpck_require__(245);
 /**
  * Commands
@@ -193,8 +203,8 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 const command_1 = __nccwpck_require__(604);
 const file_command_1 = __nccwpck_require__(352);
 const utils_1 = __nccwpck_require__(245);
-const os = __importStar(__nccwpck_require__(87));
-const path = __importStar(__nccwpck_require__(622));
+const os = __importStar(__nccwpck_require__(37));
+const path = __importStar(__nccwpck_require__(17));
 /**
  * The code to exit an action
  */
@@ -430,8 +440,8 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 // We use any as a valid input type
 /* eslint-disable @typescript-eslint/no-explicit-any */
-const fs = __importStar(__nccwpck_require__(747));
-const os = __importStar(__nccwpck_require__(87));
+const fs = __importStar(__nccwpck_require__(147));
+const os = __importStar(__nccwpck_require__(37));
 const utils_1 = __nccwpck_require__(245);
 function issueCommand(command, message) {
     const filePath = process.env[`GITHUB_${command}`];
@@ -549,10 +559,10 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const os = __importStar(__nccwpck_require__(87));
-const events = __importStar(__nccwpck_require__(614));
-const child = __importStar(__nccwpck_require__(129));
-const path = __importStar(__nccwpck_require__(622));
+const os = __importStar(__nccwpck_require__(37));
+const events = __importStar(__nccwpck_require__(361));
+const child = __importStar(__nccwpck_require__(81));
+const path = __importStar(__nccwpck_require__(17));
 const io = __importStar(__nccwpck_require__(864));
 const ioUtil = __importStar(__nccwpck_require__(887));
 /* eslint-disable @typescript-eslint/unbound-method */
@@ -1157,9 +1167,9 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 var _a;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const assert_1 = __nccwpck_require__(357);
-const fs = __importStar(__nccwpck_require__(747));
-const path = __importStar(__nccwpck_require__(622));
+const assert_1 = __nccwpck_require__(491);
+const fs = __importStar(__nccwpck_require__(147));
+const path = __importStar(__nccwpck_require__(17));
 _a = fs.promises, exports.chmod = _a.chmod, exports.copyFile = _a.copyFile, exports.lstat = _a.lstat, exports.mkdir = _a.mkdir, exports.readdir = _a.readdir, exports.readlink = _a.readlink, exports.rename = _a.rename, exports.rmdir = _a.rmdir, exports.stat = _a.stat, exports.symlink = _a.symlink, exports.unlink = _a.unlink;
 exports.IS_WINDOWS = process.platform === 'win32';
 function exists(fsPath) {
@@ -1365,9 +1375,9 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const childProcess = __importStar(__nccwpck_require__(129));
-const path = __importStar(__nccwpck_require__(622));
-const util_1 = __nccwpck_require__(669);
+const childProcess = __importStar(__nccwpck_require__(81));
+const path = __importStar(__nccwpck_require__(17));
+const util_1 = __nccwpck_require__(837);
 const ioUtil = __importStar(__nccwpck_require__(887));
 const exec = util_1.promisify(childProcess.exec);
 /**
@@ -1991,7 +2001,7 @@ function walk_obj(next, next_child) {
  * Module dependencies.
  */
 
-var DOMParser = __nccwpck_require__(626)/* .DOMParser */ .a;
+var DOMParser = (__nccwpck_require__(626)/* .DOMParser */ .a);
 
 /**
  * Module exports.
@@ -2510,7 +2520,7 @@ function parsePlistXML (node) {
     extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
     hasProp = {}.hasOwnProperty;
 
-  isObject = __nccwpck_require__(615).isObject;
+  isObject = (__nccwpck_require__(615).isObject);
 
   XMLNode = __nccwpck_require__(920);
 
@@ -2617,7 +2627,7 @@ function parsePlistXML (node) {
     extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
     hasProp = {}.hasOwnProperty;
 
-  isObject = __nccwpck_require__(615).isObject;
+  isObject = (__nccwpck_require__(615).isObject);
 
   XMLNode = __nccwpck_require__(920);
 
@@ -2664,7 +2674,7 @@ function parsePlistXML (node) {
     extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
     hasProp = {}.hasOwnProperty;
 
-  isObject = __nccwpck_require__(615).isObject;
+  isObject = (__nccwpck_require__(615).isObject);
 
   XMLNode = __nccwpck_require__(920);
 
@@ -2778,7 +2788,7 @@ function parsePlistXML (node) {
     extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
     hasProp = {}.hasOwnProperty;
 
-  isPlainObject = __nccwpck_require__(615).isPlainObject;
+  isPlainObject = (__nccwpck_require__(615).isPlainObject);
 
   XMLNode = __nccwpck_require__(920);
 
@@ -7309,59 +7319,59 @@ exports.ParseError = ParseError;
 
 /***/ }),
 
-/***/ 357:
+/***/ 491:
 /***/ ((module) => {
 
 "use strict";
-module.exports = require("assert");;
+module.exports = require("assert");
 
 /***/ }),
 
-/***/ 129:
+/***/ 81:
 /***/ ((module) => {
 
 "use strict";
-module.exports = require("child_process");;
+module.exports = require("child_process");
 
 /***/ }),
 
-/***/ 614:
+/***/ 361:
 /***/ ((module) => {
 
 "use strict";
-module.exports = require("events");;
+module.exports = require("events");
 
 /***/ }),
 
-/***/ 747:
+/***/ 147:
 /***/ ((module) => {
 
 "use strict";
-module.exports = require("fs");;
+module.exports = require("fs");
 
 /***/ }),
 
-/***/ 87:
+/***/ 37:
 /***/ ((module) => {
 
 "use strict";
-module.exports = require("os");;
+module.exports = require("os");
 
 /***/ }),
 
-/***/ 622:
+/***/ 17:
 /***/ ((module) => {
 
 "use strict";
-module.exports = require("path");;
+module.exports = require("path");
 
 /***/ }),
 
-/***/ 669:
+/***/ 837:
 /***/ ((module) => {
 
 "use strict";
-module.exports = require("util");;
+module.exports = require("util");
 
 /***/ })
 
@@ -7400,7 +7410,9 @@ module.exports = require("util");;
 /************************************************************************/
 /******/ 	/* webpack/runtime/compat */
 /******/ 	
-/******/ 	if (typeof __nccwpck_require__ !== 'undefined') __nccwpck_require__.ab = __dirname + "/";/************************************************************************/
+/******/ 	if (typeof __nccwpck_require__ !== 'undefined') __nccwpck_require__.ab = __dirname + "/";
+/******/ 	
+/************************************************************************/
 /******/ 	
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
