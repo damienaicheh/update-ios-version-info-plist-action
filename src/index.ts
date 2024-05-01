@@ -34,7 +34,7 @@ async function main(): Promise<void> {
             core.info(`Overriding CFBundleShortVersionString: ${bundleShortVersionString}`);
             obj['CFBundleShortVersionString'] = bundleShortVersionString;
         }
-        if(bundleVersion) {
+        if (bundleVersion) {
             core.info(`Overriding CFBundleVersion: ${bundleVersion}`);
             obj['CFBundleVersion'] = bundleVersion;
         }
@@ -46,10 +46,14 @@ async function main(): Promise<void> {
             core.info('After update:');
             await exec.exec('cat', [infoPlistPath]);
         }
-        
+
         core.info(`Info.plist updated successfully`);
     } catch (error) {
-        core.setFailed(error.message);
+        if (error instanceof Error) {
+            core.setFailed(error.message);
+        } else {
+            core.setFailed(`Unhandled error: ${error}`);
+        }
     }
 }
 

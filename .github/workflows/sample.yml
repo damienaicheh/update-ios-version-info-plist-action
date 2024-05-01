@@ -1,6 +1,7 @@
 name: sample
 
 on:
+  workflow_dispatch:
   pull_request:
     paths-ignore:
       - '**.md'
@@ -17,10 +18,10 @@ jobs:
     name: Sample demo
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Update iOS version Info.plist
-        uses: damienaicheh/update-ios-version-info-plist-action@v1.0.0
+        uses: damienaicheh/update-ios-version-info-plist-action@v1.2.0
         with:
           info-plist-path: './samples/Info.plist'
           bundle-short-version-string: '2.0'
